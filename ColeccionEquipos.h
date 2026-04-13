@@ -1,0 +1,13 @@
+//
+// Created by jr156 on 13/4/2026.
+//
+
+#ifndef PROYECTO1F_COLECCIONEQUIPOS_H
+#define PROYECTO1F_COLECCIONEQUIPOS_H
+
+
+class ColeccionEquipos {
+};
+
+
+#endif //PROYECTO1F_COLECCIONEQUIPOS_H

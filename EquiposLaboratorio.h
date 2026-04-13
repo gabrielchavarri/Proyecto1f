@@ -1,0 +1,13 @@
+//
+// Created by jr156 on 13/4/2026.
+//
+
+#ifndef PROYECTO1F_EQUIPOSLABORATORIO_H
+#define PROYECTO1F_EQUIPOSLABORATORIO_H
+
+
+class EquiposLaboratorio {
+};
+
+
+#endif //PROYECTO1F_EQUIPOSLABORATORIO_H
