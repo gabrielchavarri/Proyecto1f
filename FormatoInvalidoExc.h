@@ -1,0 +1,13 @@
+//
+// Created by jr156 on 13/4/2026.
+//
+
+#ifndef PROYECTO1F_FORMATOINVALIDOEXC_H
+#define PROYECTO1F_FORMATOINVALIDOEXC_H
+
+
+class FormatoInvalidoExc {
+};
+
+
+#endif //PROYECTO1F_FORMATOINVALIDOEXC_H
