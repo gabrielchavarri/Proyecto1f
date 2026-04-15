@@ -5,8 +5,24 @@
 #ifndef PROYECTO1F_EQUIPOSLABORATORIO_H
 #define PROYECTO1F_EQUIPOSLABORATORIO_H
 
+#include "Equipo.h"
 
-class EquiposLaboratorio {
+
+class EquiposLaboratorio : public Equipo {
+private:
+    string tipo_lab;
+    bool sensor_activo;
+
+public:
+    EquiposLaboratorio(const string &id, float criticidad, float estado, const string &tipo_lab);
+
+    void aplicarMant() const;
+
+    string getTipo() const override;
+
+    void calibrarSensor() const;
+
+    bool SensorActivo() const;
 };
 
 
