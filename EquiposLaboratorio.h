@@ -2,11 +2,10 @@
 // Created by jr156 on 13/4/2026.
 //
 
-#ifndef PROYECTO1F_EQUIPOSLABORATORIO_H
-#define PROYECTO1F_EQUIPOSLABORATORIO_H
+#ifndef PROYECTO1F_EQUIPOLABORATORIO_H
+#define PROYECTO1F_EQUIPOLABORATORIO_H
 
 #include "Equipo.h"
-
 
 class EquiposLaboratorio : public Equipo {
 private:
@@ -14,16 +13,13 @@ private:
     bool sensor_activo;
 
 public:
-    EquiposLaboratorio(const string &id, float criticidad, float estado, const string &tipo_lab);
+    EquiposLaboratorio(const string& id, float criticidad, float estado, const string& tipo_lab);
 
-    void aplicarMant() const;
-
+    void aplicarMant() override;
     string getTipo() const override;
 
-    void calibrarSensor() const;
-
-    bool SensorActivo() const;
+    void calibrarSensor();
+    bool isSensorActivo() const;
 };
-
 
 #endif //PROYECTO1F_EQUIPOSLABORATORIO_H

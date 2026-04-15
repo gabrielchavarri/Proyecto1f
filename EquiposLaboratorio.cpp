@@ -1,29 +1,31 @@
-//
-// Created by jr156 on 13/4/2026.
-//
-
 #include "EquiposLaboratorio.h"
 #include <iostream>
 
-EquiposLaboratorio::EquiposLaboratorio(const string& id, float criticidad, float estado, const string& tipo_lab): Equipo(id, criticidad, estado){
-    this->tipo_lab = tipo_lab;
-    this->sensor_activo = sensor_activo;
+EquiposLaboratorio::EquiposLaboratorio(const string& id, float criticidad, float estado, const string& tipo_lab)
+    : Equipo(id, criticidad, estado) {
+    this-> tipo_lab = tipo_lab;
+    this-> sensor_activo = true;
 }
 
-void EquiposLaboratorio::aplicarMant(){
-    estado  += 10;
-
+void EquiposLaboratorio::aplicarMant() {
+    estado += 10.0f;
+    tiempo_inactivo = 0;
+    if (estado > 100.0f)
+        estado = 100.0f;
 }
 
 string EquiposLaboratorio::getTipo() const {
+    return "Laboratorio";
+}
+void EquiposLaboratorio::calibrarSensor() {
+    if (!sensor_activo) {
+        sensor_activo = true;
+        cout << "Sensor calibrado en equipo " << id << endl;
+    } else {
+        cout << "Sensor ya estaba activo en equipo " << id << endl;
+    }
 }
 
-void EquiposLaboratorio::calibrarSensor(){
-    sensor_activo = true;
-    cout << "Sensor calibrando en equipo "<< id << endl;
-
-}
-
-bool EquiposLaboratorio::SensorActivo() const {
+bool EquiposLaboratorio::isSensorActivo() const {
     return sensor_activo;
 }
