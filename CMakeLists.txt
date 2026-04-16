@@ -10,8 +10,8 @@ add_executable(Proyecto1f main.cpp
         EquiposLaboratorio.h
         EquipoCritico.cpp
         EquipoCritico.h
-        Incedencia.cpp
-        Incedencia.h
+        Incidencia.cpp
+        Incidencia.h
         ColeccionEquipos.cpp
         ColeccionEquipos.h
         Tecnico.cpp
@@ -22,13 +22,11 @@ add_executable(Proyecto1f main.cpp
         MantPreventivo.h
         MantCorrectivo.cpp
         MantCorrectivo.h
-        Ordenador_T.cpp
         Ordenador_T.h
         CargadorDatos.cpp
         CargadorDatos.h
         GeneradorReportes.cpp
         GeneradorReportes.h
-        SistemaException.cpp
         SistemaException.h
         ArchivoInvalidoExc.cpp
         ArchivoInvalidoExc.h
@@ -37,4 +35,8 @@ add_executable(Proyecto1f main.cpp
         OperacionIconsistenteExc.cpp
         OperacionIconsistenteExc.h
         Simulador.cpp
-        Simulador.h)
+        Simulador.h
+        Ordenador_T.cpp
+        tareaMantenimiento.cpp
+        tareaMantenimiento.h
+)

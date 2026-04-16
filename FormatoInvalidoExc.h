@@ -5,8 +5,16 @@
 #ifndef PROYECTO1F_FORMATOINVALIDOEXC_H
 #define PROYECTO1F_FORMATOINVALIDOEXC_H
 
+#include "SistemaException.h"
 
-class FormatoInvalidoExc {
+class FormatoInvalidoExc : public SistemaException {
+private:
+    int linea;
+
+public:
+    FormatoInvalidoExc(const string &msg, int linea);
+
+    int getLinea() const;
 };
 
 

@@ -5,8 +5,16 @@
 #ifndef PROYECTO1F_ARCHIVOINVALIDOEXC_H
 #define PROYECTO1F_ARCHIVOINVALIDOEXC_H
 
+#include "SistemaException.h"
 
-class ArchivoInvalidoExc {
+class ArchivoInvalidoExc : public SistemaException {
+private:
+    string ruta;
+
+public:
+    explicit ArchivoInvalidoExc(const string &ruta);
+
+    string getRuta();
 };
 
 

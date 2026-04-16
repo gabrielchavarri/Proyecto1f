@@ -6,8 +6,32 @@
 #define PROYECTO1F_COLECCIONEQUIPOS_H
 
 
-class ColeccionEquipos {
-};
+#include "Equipo.h"
+#include "Ordenador_T.h"
 
+class ColeccionEquipos {
+private:
+    Equipo **equipos;
+    int size;
+    int capacidad;
+    Ordenador_T ordenador;
+
+public:
+    ColeccionEquipos();
+
+    ~ColeccionEquipos();
+
+    void agregar(Equipo *e);
+
+    void ordenarPorPrioridad();
+
+    Equipo *buscar(const string &id);
+
+    Equipo *obtener(int indice);
+
+    void degradarTodos();
+
+    int getSize() const;
+};
 
 #endif //PROYECTO1F_COLECCIONEQUIPOS_H

@@ -3,3 +3,11 @@
 //
 
 #include "ArchivoInvalidoExc.h"
+
+ArchivoInvalidoExc::ArchivoInvalidoExc(const string &ruta)
+    : SistemaException("Archivo invalido: " + ruta), ruta(ruta) {
+}
+
+string ArchivoInvalidoExc::getRuta() {
+    return ruta;
+}

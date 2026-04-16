@@ -5,8 +5,22 @@
 #ifndef PROYECTO1F_SISTEMAEXCEPTION_H
 #define PROYECTO1F_SISTEMAEXCEPTION_H
 
+#include <exception>
+#include <string>
+using namespace std;
 
-class SistemaException {
+
+class SistemaException : public exception {
+protected:
+    string mensaje;
+
+public:
+    explicit SistemaException(const string &msg) : mensaje(msg) {
+    }
+
+    const char *what() const noexcept override {
+        return mensaje.c_str();
+    }
 };
 
 
