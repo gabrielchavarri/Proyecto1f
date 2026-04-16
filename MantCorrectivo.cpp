@@ -3,3 +3,8 @@
 //
 
 #include "MantCorrectivo.h"
+
+void MantCorrectivo::aplicar(Equipo *equipo) {
+        equipo->resolverIncidencia();
+    }
+

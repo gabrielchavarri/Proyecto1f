@@ -14,8 +14,7 @@ private:
 
 public:
     EquiposLaboratorio(const string& id, float criticidad, float estado, const string& tipo_lab);
-
-    void aplicarMant() override;
+    void aplicarMant();
     string getTipo() const override;
 
     void calibrarSensor();

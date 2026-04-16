@@ -4,9 +4,14 @@
 
 #ifndef PROYECTO1F_MANTSTRATEGY_H
 #define PROYECTO1F_MANTSTRATEGY_H
-
+#include <vector>
+#include <iostream>
+class Equipo;
 
 class MantStrategy {
+public:
+    virtual void aplicar(Equipo * equipo )=0;
+    virtual ~MantStrategy(){};
 };
 
 

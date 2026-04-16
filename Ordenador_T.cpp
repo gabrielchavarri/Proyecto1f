@@ -5,14 +5,19 @@
 #include "Ordenador_T.h"
 
 void Ordenador_T::ordenar(Equipo **arr, int n) {
-    for (int i = n / 2 - 1; i >= 0; i--)
-        acomodar(arr, n, i);
-    for (int i = n - 1; i > 0; i--) {
-        Equipo *temp = arr[0];
-        arr[0] = arr[i];
-        arr[i] = temp;
-        acomodar(arr, i, 0);
-    }
+  for (int i = 0; i < n - 1; i++) {
+      int max = i;
+      for (int j = i + 1; j < n; j++) {
+          if (arr[j]->calcularPrioridad() > arr[max]->calcularPrioridad()) {
+              max = j;
+          }
+      }
+      if (max != i) {
+          Equipo *aux = arr[i];
+          arr[i] = arr[max];
+          arr[max] = aux;
+      }
+  }
 }
 
 int Ordenador_T::busquedaBinaria(Equipo **arr, int n, const string &id) {
@@ -26,20 +31,3 @@ int Ordenador_T::busquedaBinaria(Equipo **arr, int n, const string &id) {
     return -1;
 }
 
-void Ordenador_T::acomodar(Equipo **arr, int n, int i) {
-    int mayor = i;
-    int izq = 2 * i + 1;
-    int der = 2 * i + 2;
-
-    if (izq < n && arr[izq]->calcularPrioridad() > arr[mayor]->calcularPrioridad())
-        mayor = izq;
-    if (der < n && arr[der]->calcularPrioridad() > arr[mayor]->calcularPrioridad())
-        mayor = der;
-
-    if (mayor != i) {
-        Equipo *temp = arr[i];
-        arr[i] = arr[mayor];
-        arr[mayor] = temp;
-        acomodar(arr, n, mayor);
-    }
-}

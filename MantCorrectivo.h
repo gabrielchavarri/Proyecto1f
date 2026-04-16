@@ -4,9 +4,13 @@
 
 #ifndef PROYECTO1F_MANTCORRECTIVO_H
 #define PROYECTO1F_MANTCORRECTIVO_H
+#include "Equipo.h"
+#include "MantStrategy.h"
 
 
-class MantCorrectivo {
+class MantCorrectivo : public MantStrategy {
+    public:
+    void aplicar(Equipo * equipo) override ;
 };
 
 

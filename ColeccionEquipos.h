@@ -32,6 +32,7 @@ public:
     void degradarTodos();
 
     int getSize() const;
+    void actualizarPrioridades();
 };
 
 #endif //PROYECTO1F_COLECCIONEQUIPOS_H

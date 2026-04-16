@@ -4,9 +4,15 @@
 
 #ifndef PROYECTO1F_MANTPREVENTIVO_H
 #define PROYECTO1F_MANTPREVENTIVO_H
+#include "Equipo.h"
+#include "MantStrategy.h"
 
 
-class MantPreventivo {
+class MantPreventivo : public MantStrategy {
+    public:
+    void aplicar(Equipo * equipo) override ;
+
+
 };
 
 

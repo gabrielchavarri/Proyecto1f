@@ -8,10 +8,10 @@ EquiposLaboratorio::EquiposLaboratorio(const string& id, float criticidad, float
 }
 
 void EquiposLaboratorio::aplicarMant() {
-    estado += 10.0f;
+    estado += 10.0;
     tiempo_inactivo = 0;
-    if (estado > 100.0f)
-        estado = 100.0f;
+    if (estado > 100.0)
+        estado = 100.0;
 }
 
 string EquiposLaboratorio::getTipo() const {

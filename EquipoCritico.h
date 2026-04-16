@@ -16,7 +16,7 @@ private:
 public:
     EquipoCritico(const string &id, float criticidad, float estado, const string &protocolo);
 
-    void aplicarMant() override;
+    void aplicarMant() ;
 
     string getProtocoloEsp() const;
 

@@ -3,3 +3,9 @@
 //
 
 #include "MantPreventivo.h"
+#include "Equipo.h"
+void MantPreventivo::aplicar(Equipo* eq) {
+    eq->setEstado(eq->getEstado()+ 10);
+    if (eq->getEstado() >100)
+        eq->setEstado(100);
+}
