@@ -23,7 +23,8 @@ public:
     void activarProtocolo();
 
     float getNivelRiesgo() const;
-};
+
+string getTipo() const override;};
 
 
 #endif //PROYECTO1F_EQUIPOCRITICO_H

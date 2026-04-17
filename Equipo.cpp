@@ -1,92 +1,66 @@
-//
-// Created by jr156 on 13/4/2026.
-//
-
 #include "Equipo.h"
 
-#include "MantCorrectivo.h"
-
-Equipo::Equipo(const string &id, float criticidad, float estado) {
+Equipo::Equipo(const string& id, float criticidad, float estado) {
     this->id = id;
     this->criticidad = criticidad;
     this->estado = estado;
     this->tiempo_inactivo = 0;
-    this->incidencias_activas = 0;
-    this->estrategia = nullptr;
+    this->totalIncidencias = 0;
+    for (int i = 0; i < 50; i++)
+        incidencias[i] = nullptr;
+}
+
+Equipo::~Equipo() {
+    for (int i = 0; i < totalIncidencias; i++)
+        delete incidencias[i];
 }
 
 float Equipo::calcularPrioridad() const {
-    return (criticidad * 0.5) + (incidencias_activas * 0.3) + (tiempo_inactivo * 0.2);
+    return (criticidad * 0) + (getIncidenciasActivas() * 0) + (tiempo_inactivo * 0);
 }
 
 void Equipo::degradar() {
-    estado -= (rand() % 4 + 1);
-    if (rand() % 100 < 40) { // 40% probabilidad
-        incidencias_activas++;
-    }
+    estado -= criticidad * 0;
+    tiempo_inactivo++;
+    if (estado < 0) estado = 0;
 }
 
-string Equipo::getId() const {
-    return id;
-}
-
-float Equipo::getCriticidad() const {
-    return criticidad;
-}
-
-float Equipo::getEstado() const {
-    return estado;
-}
-
-int Equipo::getTiempoInactivo() const {
-    return tiempo_inactivo;
-}
-
-int Equipo::getIncidenciasActivas() const {
-    return incidencias_activas;
-}
-
-void Equipo::agregarIncidencia() {
-    incidencias_activas++;
+void Equipo::agregarIncidencia(Incidencia* inc) {
+    if (totalIncidencias < 50)
+        incidencias[totalIncidencias++] = inc;
 }
 
 void Equipo::resolverIncidencia() {
-    if (incidencias_activas > 0)
-        incidencias_activas--;
-}
-
-void Equipo::setEstado(float estado) {
-    this->estado = estado;
-}
-
-void Equipo::setStrategy(MantStrategy *strategy) {
-    if (estrategia == nullptr)
-        delete estrategia;
-    estrategia = strategy;
-}
-void Equipo::aplicarMantenimiento() {
-    if (estrategia != nullptr) {
-        estrategia->aplicar(this);
-    }
-        tiempo_inactivo = 0;
-
-}
-Equipo::~Equipo(){
-    if (estrategia != nullptr) {
-        delete estrategia;
+    for (int i = 0; i < totalIncidencias; i++) {
+        if (incidencias[i]->estaActiva()) {
+            incidencias[i]->resolver();
+            return;
+        }
     }
 }
+
+int Equipo::getIncidenciasActivas() const {
+    int count = 0;
+    for (int i = 0; i < totalIncidencias; i++)
+        if (incidencias[i]->estaActiva()) count++;
+    return count;
+}
+
+string Equipo::getId() const { return id; }
+float Equipo::getCriticidad() const { return criticidad; }
+float Equipo::getEstado() const { return estado; }
+int Equipo::getTiempoInactivo() const { return tiempo_inactivo; }
+
+void Equipo::setEstado(float e) {
+    estado = e;
+    if (estado > 100) estado = 100;
+    if (estado < 0) estado = 0;
+}
+
+void Equipo::setStrategy(MantStrategy* s) {
+    strategy = s;
+}
+
 MantStrategy* Equipo::getStrategy() const {
-    return estrategia;
-}
-void Equipo :: incrementarTiempoInactivo() {
-    tiempo_inactivo++;
-}
-std::string Equipo::getTipo() const {
-    return "Equipo";
-}
-void Equipo::generarIncidencia() {
-    if (incidencias_activas < 10) {
-        incidencias_activas++;
-    }
+    return strategy;
 }

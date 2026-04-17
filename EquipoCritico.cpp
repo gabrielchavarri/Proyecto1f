@@ -30,3 +30,9 @@ void EquipoCritico::activarProtocolo() {
 float EquipoCritico::getNivelRiesgo() const {
     return nivel_riesgo;
 }
+
+string EquipoCritico::getTipo() const {
+    return "Critico";
+}
+
+
