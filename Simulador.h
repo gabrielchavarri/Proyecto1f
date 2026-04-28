@@ -5,15 +5,16 @@
 #ifndef PROYECTO1F_SIMULADOR_H
 #define PROYECTO1F_SIMULADOR_H
 #include "ColeccionEquipos.h"
-#include "MantStrategy.h"
+#include <cstdio>
 
 class Simulador {
 private:
     ColeccionEquipos* equipos;
 public:
-    Simulador(ColeccionEquipos *equipoos);
+    Simulador(ColeccionEquipos* equipos);
     void ejecutarSimulador();
 };
+
 
 
 #endif //PROYECTO1F_SIMULADOR_H

@@ -17,7 +17,6 @@ protected:
     int tiempo_inactivo;
     Incidencia* incidencias[50];
     int totalIncidencias;
-    MantStrategy* strategy;
 
 public:
     Equipo(const string& id, float criticidad, float estado);
@@ -38,10 +37,7 @@ public:
     float getEstado() const;
     int getTiempoInactivo() const;
     void setEstado(float e);
-    void setStrategy(MantStrategy* s);
-    MantStrategy* getStrategy() const;
 };
-
 
 
 #endif //PROYECTO1F_EQUIPO_H

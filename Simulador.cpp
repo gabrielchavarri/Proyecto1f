@@ -1,55 +1,61 @@
 #include "Simulador.h"
 #include "MantCorrectivo.h"
 #include "MantPreventivo.h"
-#include <fstream>
+#include "Incidencia.h"
 #include <cstdlib>
 
-Simulador::Simulador(ColeccionEquipos *equipoos) {
+Simulador::Simulador(ColeccionEquipos* equipoos) {
     equipos = equipoos;
 }
 
 void Simulador::ejecutarSimulador() {
-    std::ofstream archivo("reporte.txt");
+    FILE* archivo = fopen("reporte.txt", "w");
     int total = equipos->getSize();
+    int backlog = 0;
+
     for (int dia = 1; dia <= 30; dia++) {
-        archivo << "Dia " << dia << std::endl;
+        fprintf(archivo, "Dia %d\n", dia);
+
+        for (int i = 0; i < total; i++)
+            equipos->obtener(i)->degradar();
+
         for (int i = 0; i < total; i++) {
-            Equipo* eq = equipos->obtener(i);
-            eq->degradar();
-            eq->incrementarTiempoInactivo();
-            if (rand() % 100 < 30) {
-                eq->generarIncidencia();
-            }
+            if (rand() % 100 < 30)
+                equipos->obtener(i)->agregarIncidencia(
+                    new Incidencia(equipos->obtener(i)->getId(), "MEDIA", dia)
+                );
         }
+
         equipos->ordenarPorPrioridad();
+
         int limite = (total < 3) ? total : 3;
-        archivo << "Top prioridad: ";
+        fprintf(archivo, "Top prioridad: ");
+
         for (int i = 0; i < limite; i++) {
             Equipo* eq = equipos->obtener(i);
-            if (eq->getIncidenciasActivas() > 2)
-                eq->setStrategy(new MantCorrectivo());
-            else
-                eq->setStrategy(new MantPreventivo());
-            eq->aplicarMantenimiento();
-            archivo << eq->getId()
-                    << "(" << eq->calcularPrioridad() << ") ";
+            if (eq->getIncidenciasActivas() > 2) {
+                MantCorrectivo correctivo;
+                correctivo.aplicar(eq);
+            } else {
+                MantPreventivo preventivo;
+                preventivo.aplicar(eq);
+            }
+            fprintf(archivo, "%s(%.1f) ", eq->getId().c_str(), eq->calcularPrioridad());
         }
-        archivo << std::endl;
-        static int backlog = 0;
+
+        fprintf(archivo, "\n");
         backlog += (total - limite);
-        archivo << "Backlog: " << backlog << std::endl;
+        fprintf(archivo, "Backlog: %d\n", backlog);
+
         float riesgo = 0;
-        for (int i = 0; i < total; i++) {
+        for (int i = 0; i < total; i++)
             riesgo += equipos->obtener(i)->calcularPrioridad();
-        }
-        if (riesgo > total * 8)
-            archivo << "Riesgo: ALTO";
-        else if (riesgo > total * 5)
-            archivo << "Riesgo: MEDIO";
-        else
-            archivo << "Riesgo: BAJO";
-        archivo << std::endl;
-        archivo << "------------------------" << std::endl;
+
+        if (riesgo > total * 8) fprintf(archivo, "Riesgo: ALTO\n");
+        else if (riesgo > total * 5) fprintf(archivo, "Riesgo: MEDIO\n");
+        else fprintf(archivo, "Riesgo: BAJO\n");
+
+        fprintf(archivo, "------------------------\n");
     }
-    archivo.close();
+    fclose(archivo);
 }

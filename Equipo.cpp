@@ -16,13 +16,13 @@ Equipo::~Equipo() {
 }
 
 float Equipo::calcularPrioridad() const {
-    return (criticidad * 0) + (getIncidenciasActivas() * 0) + (tiempo_inactivo * 0);
+    return (criticidad * 0.5f) + (getIncidenciasActivas() * 0.3f) + (tiempo_inactivo * 0.2f);
 }
 
 void Equipo::degradar() {
-    estado -= criticidad * 0;
+    estado -= criticidad * 0.5f;
     tiempo_inactivo++;
-    if (estado < 0) estado = 0;
+    if (estado < 0.0f) estado = 0.0f;
 }
 
 void Equipo::agregarIncidencia(Incidencia* inc) {
@@ -53,14 +53,6 @@ int Equipo::getTiempoInactivo() const { return tiempo_inactivo; }
 
 void Equipo::setEstado(float e) {
     estado = e;
-    if (estado > 100) estado = 100;
-    if (estado < 0) estado = 0;
-}
-
-void Equipo::setStrategy(MantStrategy* s) {
-    strategy = s;
-}
-
-MantStrategy* Equipo::getStrategy() const {
-    return strategy;
+    if (estado > 100.0f) estado = 100.0f;
+    if (estado < 0.0f) estado = 0.0f;
 }
