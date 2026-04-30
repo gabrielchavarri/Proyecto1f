@@ -7,6 +7,7 @@
 #include <string>
 #include "Incidencia.h"
 #include "MantStrategy.h"
+
 using namespace std;
 
 class Equipo {
@@ -15,7 +16,7 @@ protected:
     float criticidad;
     float estado;
     int tiempo_inactivo;
-    Incidencia* incidencias[50];
+    Incidencia* incidencias[100];
     int totalIncidencias;
 
 public:

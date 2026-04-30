@@ -3,9 +3,8 @@
 //
 
 #include "ColeccionEquipos.h"
-#include <stdexcept>
 ColeccionEquipos::ColeccionEquipos() {
-    capacidad = 30;
+    capacidad = 10;
     size = 0;
     equipos = new Equipo *[capacidad];
 }
@@ -16,13 +15,10 @@ ColeccionEquipos::~ColeccionEquipos() {
     delete[] equipos;
 }
 
-void ColeccionEquipos::agregar(Equipo *e) {
-    if (size >= capacidad) {
-        throw std::runtime_error("Capacidad maxima alcanzada");
-    }
+void ColeccionEquipos::agregar(Equipo* e) {
     if (size == capacidad) {
         capacidad *= 2;
-        Equipo **nuevo = new Equipo *[capacidad];
+        Equipo** nuevo = new Equipo*[capacidad];
         for (int i = 0; i < size; i++)
             nuevo[i] = equipos[i];
         delete[] equipos;

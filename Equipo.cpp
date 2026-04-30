@@ -1,4 +1,5 @@
 #include "Equipo.h"
+#include "OperacionIconsistenteExc.h"
 
 Equipo::Equipo(const string& id, float criticidad, float estado) {
     this->id = id;
@@ -6,7 +7,7 @@ Equipo::Equipo(const string& id, float criticidad, float estado) {
     this->estado = estado;
     this->tiempo_inactivo = 0;
     this->totalIncidencias = 0;
-    for (int i = 0; i < 50; i++)
+    for (int i = 0; i < 100; i++)
         incidencias[i] = nullptr;
 }
 
@@ -26,8 +27,9 @@ void Equipo::degradar() {
 }
 
 void Equipo::agregarIncidencia(Incidencia* inc) {
-    if (totalIncidencias < 50)
-        incidencias[totalIncidencias++] = inc;
+    if (totalIncidencias >= 100)
+        throw OperacionIconsistenteExc("Capacidad maxima de incidencias alcanzada en " + id);
+    incidencias[totalIncidencias++] = inc;
 }
 
 void Equipo::resolverIncidencia() {

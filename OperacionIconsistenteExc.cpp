@@ -1,5 +1,8 @@
-//
-// Created by jr156 on 13/4/2026.
-//
-
 #include "OperacionIconsistenteExc.h"
+
+OperacionIconsistenteExc::OperacionIconsistenteExc(const string& contexto)
+    : SistemaException("Operacion inconsistente: " + contexto), contexto(contexto) {}
+
+string OperacionIconsistenteExc::getContexto() const {
+    return contexto;
+}

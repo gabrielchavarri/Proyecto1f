@@ -6,8 +6,14 @@
 #define PROYECTO1F_OPERACIONICONSISTENTEEXC_H
 
 
-class OperacionIconsistenteExc {
-};
+#include "SistemaException.h"
 
+class OperacionIconsistenteExc : public SistemaException {
+private:
+    string contexto;
+public:
+    explicit OperacionIconsistenteExc(const string& contexto);
+    string getContexto() const;
+};
 
 #endif //PROYECTO1F_OPERACIONICONSISTENTEEXC_H
