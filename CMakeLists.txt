@@ -41,4 +41,6 @@ add_executable(Proyecto1f main.cpp
         tareaMantenimiento.h
         MaintenancePlanner.cpp
         MaintenancePlanner.h
+        Interfaz.cpp
+        Interfaz.h
 )

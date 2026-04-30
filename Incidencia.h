@@ -8,24 +8,24 @@
 #include <string>
 using namespace std;
 
-class Equipo;
+class Equipo; // forward declaration
 
 class Incidencia {
 private:
     string equipo_id;
+    Equipo* equipo;
     string severidad;
     int dia_reporte;
     bool activa;
 
 public:
-    Incidencia(const string &equipo_id, const string &severidad, int dia_reporte);
+    Incidencia(Equipo* equipo, const string &equipo_id, const string &severidad, int dia_reporte);
 
     string getEquipoId() const;
+    Equipo* getEquipo() const;
 
     string getSeveridad() const;
-
     int getDiaReporte() const;
-
     bool estaActiva() const;
 
     void resolver();

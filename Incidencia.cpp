@@ -1,7 +1,9 @@
 #include "Incidencia.h"
+#include "Equipo.h"
 
-Incidencia::Incidencia(const string &equipo_id, const string &severidad, int dia_reporte)
-    : equipo_id(equipo_id),
+Incidencia::Incidencia(Equipo* equipo, const string &equipo_id, const string &severidad, int dia_reporte)
+    : equipo(equipo),
+      equipo_id(equipo_id),
       severidad(severidad),
       dia_reporte(dia_reporte),
       activa(true) {
@@ -9,6 +11,10 @@ Incidencia::Incidencia(const string &equipo_id, const string &severidad, int dia
 
 string Incidencia::getEquipoId() const {
     return equipo_id;
+}
+
+Equipo* Incidencia::getEquipo() const {
+    return equipo;
 }
 
 string Incidencia::getSeveridad() const {
@@ -28,6 +34,6 @@ void Incidencia::resolver() {
 }
 
 string Incidencia::Texto() const {
-    return "Incidencia;" + equipo_id + ";" + severidad + ";dia=" + to_string(dia_reporte) + ";activa=" + (
-               activa ? "SI" : "NO");
+    return "Incidencia;" + equipo_id + ";" + severidad + ";dia=" +
+           to_string(dia_reporte) + ";activa=" + (activa ? "SI" : "NO");
 }

@@ -7,6 +7,7 @@ Equipo::Equipo(const string& id, float criticidad, float estado) {
     this->estado = estado;
     this->tiempo_inactivo = 0;
     this->totalIncidencias = 0;
+
     for (int i = 0; i < 100; i++)
         incidencias[i] = nullptr;
 }
@@ -17,18 +18,26 @@ Equipo::~Equipo() {
 }
 
 float Equipo::calcularPrioridad() const {
-    return (criticidad * 0.5f) + (getIncidenciasActivas() * 0.3f) + (tiempo_inactivo * 0.2f);
+    return (criticidad * 0.5f) +
+           (getIncidenciasActivas() * 0.3f) +
+           (tiempo_inactivo * 0.2f);
 }
 
 void Equipo::degradar() {
     estado -= criticidad * 0.5f;
     tiempo_inactivo++;
+
     if (estado < 0.0f) estado = 0.0f;
 }
 
 void Equipo::agregarIncidencia(Incidencia* inc) {
     if (totalIncidencias >= 100)
         throw OperacionIconsistenteExc("Capacidad maxima de incidencias alcanzada en " + id);
+
+    // 🔥 validación PRO (opcional pero suma puntos)
+    if (inc->getEquipo() != this)
+        throw OperacionIconsistenteExc("Incidencia no pertenece a este equipo");
+
     incidencias[totalIncidencias++] = inc;
 }
 
@@ -43,8 +52,11 @@ void Equipo::resolverIncidencia() {
 
 int Equipo::getIncidenciasActivas() const {
     int count = 0;
+
     for (int i = 0; i < totalIncidencias; i++)
-        if (incidencias[i]->estaActiva()) count++;
+        if (incidencias[i]->estaActiva())
+            count++;
+
     return count;
 }
 
@@ -55,6 +67,7 @@ int Equipo::getTiempoInactivo() const { return tiempo_inactivo; }
 
 void Equipo::setEstado(float e) {
     estado = e;
+
     if (estado > 100.0f) estado = 100.0f;
     if (estado < 0.0f) estado = 0.0f;
 }

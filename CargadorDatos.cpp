@@ -66,7 +66,7 @@ void CargadorDatos::cargarIncidencias(const string& ruta, ColeccionEquipos& cole
         if (eq == nullptr)
             throw FormatoInvalidoExc("equipo no encontrado: " + equipoId, nro);
 
-        eq->agregarIncidencia(new Incidencia(equipoId, severidad, stoi(dia)));
+        eq->agregarIncidencia(new Incidencia(eq, equipoId, severidad, stoi(dia)));
     }
     fclose(archivo);
 }

@@ -4,6 +4,7 @@
 
 #ifndef PROYECTO1F_EQUIPO_H
 #define PROYECTO1F_EQUIPO_H
+
 #include <string>
 #include "Incidencia.h"
 #include "MantStrategy.h"
@@ -39,6 +40,5 @@ public:
     int getTiempoInactivo() const;
     void setEstado(float e);
 };
-
 
 #endif //PROYECTO1F_EQUIPO_H
