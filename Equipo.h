@@ -39,6 +39,8 @@ public:
     float getEstado() const;
     int getTiempoInactivo() const;
     void setEstado(float e);
+    void resetTiempoInactivo();
+    void incrementarTiempoInactivo();
 };
 
 #endif //PROYECTO1F_EQUIPO_H

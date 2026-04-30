@@ -23,7 +23,7 @@ void Simulador::ejecutarSimulador() {
 
         // 2. Agregar incidencias
         for (int i = 0; i < total; i++) {
-            if (rand() % 100 < 30) {
+            if (rand() % 100 < 10) {
                 Equipo *eq = equipos->obtener(i);
 
                 eq->agregarIncidencia(
@@ -82,7 +82,13 @@ void Simulador::ejecutarSimulador() {
         fprintf(archivo, "\n");
 
         // 7. Backlog y riesgo global
-        backlog += (total - limite);
+        backlog = 0;
+
+        for (int i = 0; i < total; i++) {
+            if (equipos->obtener(i)->getIncidenciasActivas() > 0) {
+                backlog++;
+            }
+        }
         fprintf(archivo, "Backlog pendiente: %d\n", backlog);
 
         float riesgo = 0;

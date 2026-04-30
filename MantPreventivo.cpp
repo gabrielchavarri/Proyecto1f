@@ -5,7 +5,12 @@
 #include "MantPreventivo.h"
 #include "Equipo.h"
 void MantPreventivo::aplicar(Equipo* eq) {
-    eq->setEstado(eq->getEstado()+ 10);
-    if (eq->getEstado() >100)
+    if (!eq) return;
+
+    eq->setEstado(eq->getEstado() + 15);
+
+    if (eq->getEstado() > 100)
         eq->setEstado(100);
+
+    eq->resetTiempoInactivo();
 }

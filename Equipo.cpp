@@ -24,10 +24,11 @@ float Equipo::calcularPrioridad() const {
 }
 
 void Equipo::degradar() {
-    estado -= criticidad * 0.5f;
-    tiempo_inactivo++;
+    estado -= criticidad * 0.1f;
 
-    if (estado < 0.0f) estado = 0.0f;
+    if (estado < 0) estado = 0;
+
+    incrementarTiempoInactivo();
 }
 
 void Equipo::agregarIncidencia(Incidencia* inc) {
@@ -70,4 +71,11 @@ void Equipo::setEstado(float e) {
 
     if (estado > 100.0f) estado = 100.0f;
     if (estado < 0.0f) estado = 0.0f;
+}
+
+void Equipo::resetTiempoInactivo() {
+    tiempo_inactivo = 0;
+}
+void Equipo::incrementarTiempoInactivo() {
+    tiempo_inactivo++;
 }
