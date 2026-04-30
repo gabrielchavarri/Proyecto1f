@@ -19,6 +19,7 @@ protected:
     int tiempo_inactivo;
     Incidencia* incidencias[100];
     int totalIncidencias;
+    float prioridadCache;
 
 public:
     Equipo(const string& id, float criticidad, float estado);
@@ -41,6 +42,8 @@ public:
     void setEstado(float e);
     void resetTiempoInactivo();
     void incrementarTiempoInactivo();
+    float getPrioridad() const;
+    void setPrioridad(float prioridad);
 };
 
 #endif //PROYECTO1F_EQUIPO_H

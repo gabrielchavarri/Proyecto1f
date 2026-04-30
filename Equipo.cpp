@@ -79,3 +79,9 @@ void Equipo::resetTiempoInactivo() {
 void Equipo::incrementarTiempoInactivo() {
     tiempo_inactivo++;
 }
+float Equipo::getPrioridad() const {
+    return prioridadCache;
+}
+void Equipo::setPrioridad(float p) {
+    prioridadCache = p;
+}

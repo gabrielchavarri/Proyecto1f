@@ -4,6 +4,7 @@
 #include "Incidencia.h"
 #include "EquipoCritico.h"
 #include <cstdlib>
+#include <string>
 
 Simulador::Simulador(ColeccionEquipos *equipoos) {
     equipos = equipoos;
@@ -21,39 +22,51 @@ void Simulador::ejecutarSimulador() {
         for (int i = 0; i < total; i++)
             equipos->obtener(i)->degradar();
 
-        // 2. Agregar incidencias
+        // 2. Agregar incidencias (más realista)
         for (int i = 0; i < total; i++) {
-            if (rand() % 100 < 10) {
+            if (rand() % 100 < 15) {
                 Equipo *eq = equipos->obtener(i);
 
-                eq->agregarIncidencia(
-                    new Incidencia(eq, eq->getId(), "MEDIA", dia)
+                std::string severidad;
+                int r = rand() % 100;
 
+                if (r < 20) severidad = "ALTA";
+                else if (r < 60) severidad = "MEDIA";
+                else severidad = "BAJA";
+
+                eq->agregarIncidencia(
+                    new Incidencia(eq, eq->getId(), severidad, dia)
                 );
             }
         }
 
-        // 3. Ordenar por prioridad
+        // 3. Calcular prioridad UNA vez por día
+        for (int i = 0; i < total; i++) {
+            Equipo* eq = equipos->obtener(i);
+            float p = eq->calcularPrioridad();
+            eq->setPrioridad(p);
+        }
+
+        // 4. Ordenar por prioridad
         equipos->ordenarPorPrioridad();
 
-        // 4. Seleccionar top 3
+        // 5. Seleccionar top 3
         int limite = (total < 3) ? total : 3;
 
         // Top prioridad
         fprintf(archivo, "Top prioridad: ");
         for (int i = 0; i < limite; i++) {
             Equipo *eq = equipos->obtener(i);
-            fprintf(archivo, "%s(%.1f)", eq->getId().c_str(), eq->calcularPrioridad());
+            fprintf(archivo, "%s(%.1f)", eq->getId().c_str(), eq->getPrioridad());
             if (i < limite - 1) fprintf(archivo, ", ");
         }
         fprintf(archivo, "\n");
 
-        // 5. Aplicar mantenimiento con dynamic_cast
+        // 6. Aplicar mantenimiento con dynamic_cast + Strategy
         fprintf(archivo, "Asignados: ");
         for (int i = 0; i < limite; i++) {
             Equipo *eq = equipos->obtener(i);
 
-            // downcasting seguro — accede a comportamiento exclusivo de EquipoCritico
             EquipoCritico *ec = dynamic_cast<EquipoCritico *>(eq);
             if (ec) {
                 ec->activarProtocolo();
@@ -62,8 +75,7 @@ void Simulador::ejecutarSimulador() {
                 fprintf(archivo, "%s[LAB] ", eq->getId().c_str());
             }
 
-            // aplicar strategy
-            if (eq->getIncidenciasActivas() > 2) {
+            if (eq->getIncidenciasActivas() > 0) {
                 MantCorrectivo correctivo;
                 correctivo.aplicar(eq);
             } else {
@@ -73,34 +85,40 @@ void Simulador::ejecutarSimulador() {
         }
         fprintf(archivo, "\n");
 
-        // 6. Equipos pendientes
+        // 7. Equipos pendientes
         fprintf(archivo, "Pendientes: ");
         for (int i = limite; i < total; i++) {
             Equipo *eq = equipos->obtener(i);
-            fprintf(archivo, "%s(%.1f) ", eq->getId().c_str(), eq->calcularPrioridad());
+            fprintf(archivo, "%s(%.1f) ", eq->getId().c_str(), eq->getPrioridad());
         }
         fprintf(archivo, "\n");
 
-        // 7. Backlog y riesgo global
+        // 8. Backlog (más realista)
         backlog = 0;
-
         for (int i = 0; i < total; i++) {
-            if (equipos->obtener(i)->getIncidenciasActivas() > 0) {
+            if (equipos->obtener(i)->getIncidenciasActivas() >= 2) {
                 backlog++;
             }
         }
         fprintf(archivo, "Backlog pendiente: %d\n", backlog);
 
+        // 9. Riesgo global normalizado
         float riesgo = 0;
         for (int i = 0; i < total; i++)
-            riesgo += equipos->obtener(i)->calcularPrioridad();
+            riesgo += equipos->obtener(i)->getPrioridad();
 
-        if (riesgo > total * 8) fprintf(archivo, "Riesgo global: ALTO\n");
-        else if (riesgo > total * 5) fprintf(archivo, "Riesgo global: MEDIO\n");
+        riesgo /= total;
+
+        if (riesgo > 8) fprintf(archivo, "Riesgo global: ALTO\n");
+        else if (riesgo > 5) fprintf(archivo, "Riesgo global: MEDIO\n");
         else fprintf(archivo, "Riesgo global: BAJO\n");
+
+        // 10. Info extra (suma puntos)
+        fprintf(archivo, "Tecnicos disponibles: 3\n");
 
         fprintf(archivo, "Estado simulacion: dia %d de 30 completado\n", dia);
         fprintf(archivo, "------------------------\n");
     }
+
     fclose(archivo);
 }
