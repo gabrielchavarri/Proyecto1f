@@ -12,6 +12,10 @@ Simulador::Simulador(ColeccionEquipos *equipoos) {
 
 void Simulador::ejecutarSimulador() {
     FILE *archivo = fopen("reporte.txt", "w");
+    if (!archivo) {
+        printf("Error al crear archivo de reporte\n");
+        return;
+    }
     int total = equipos->getSize();
     int backlog = 0;
 
@@ -22,7 +26,7 @@ void Simulador::ejecutarSimulador() {
         for (int i = 0; i < total; i++)
             equipos->obtener(i)->degradar();
 
-        // 2. Agregar incidencias (más realista)
+        // 2. Agregar incidencias
         for (int i = 0; i < total; i++) {
             if (rand() % 100 < 15) {
                 Equipo *eq = equipos->obtener(i);
@@ -34,9 +38,12 @@ void Simulador::ejecutarSimulador() {
                 else if (r < 60) severidad = "MEDIA";
                 else severidad = "BAJA";
 
-                eq->agregarIncidencia(
-                    new Incidencia(eq, eq->getId(), severidad, dia)
-                );
+                Incidencia* inc = new Incidencia(eq, eq->getId(), severidad, dia);
+                eq->agregarIncidencia(inc);
+
+
+                if (inc->getEquipo()->getCriticidad() > 9) {
+                }
             }
         }
 

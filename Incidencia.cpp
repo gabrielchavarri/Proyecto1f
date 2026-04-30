@@ -34,6 +34,7 @@ void Incidencia::resolver() {
 }
 
 string Incidencia::Texto() const {
-    return "Incidencia;" + equipo_id + ";" + severidad + ";dia=" +
-           to_string(dia_reporte) + ";activa=" + (activa ? "SI" : "NO");
+    return "INC;" + equipo_id + ";severidad=" + severidad +
+       ";dia=" + to_string(dia_reporte) +
+       ";activa=" + (activa ? "SI" : "NO");
 }

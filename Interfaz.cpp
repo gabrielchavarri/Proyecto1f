@@ -1,13 +1,11 @@
-//
-// Created by jr156 on 29/4/2026.
-//
-
 #include "Interfaz.h"
 #include "ArchivoInvalidoExc.h"
 #include "FormatoInvalidoExc.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+
+using namespace std;
 
 Interfaz::Interfaz() {
     coleccion = new ColeccionEquipos();
@@ -19,42 +17,56 @@ Interfaz::~Interfaz() {
 }
 
 void Interfaz::mostrarBienvenida() {
-    cout << "========================================" << endl;
-    cout << "  Sistema de Planificacion de Mantenimiento" << endl;
-    cout << "  Universidad Nacional de Costa Rica" << endl;
-    cout << "========================================" << endl;
+    cout << "========================================\n";
+    cout << "  Sistema de Planificacion de Mantenimiento\n";
+    cout << "  Universidad Nacional de Costa Rica\n";
+    cout << "========================================\n\n";
 }
 
 void Interfaz::cargarDatos() {
     CargadorDatos cargador;
+
     try {
-        cout << "Cargando equipos..." << endl;
+        cout << "[INFO] Cargando equipos...\n";
         cargador.cargarEquipos("equipos.txt", *coleccion);
-        cout << "Equipos cargados: " << coleccion->getSize() << endl;
+        cout << "[OK] Equipos cargados: " << coleccion->getSize() << "\n\n";
 
-        cout << "Cargando incidencias..." << endl;
+        cout << "[INFO] Cargando incidencias...\n";
         cargador.cargarIncidencias("incidencias.txt", *coleccion);
-        cout << "Incidencias cargadas correctamente." << endl;
-
-    } catch (ArchivoInvalidoExc& e) {
-        cout << "Error: " << e.what() << endl;
-        exit(1);
-    } catch (FormatoInvalidoExc& e) {
-        cout << "Error: " << e.what() << endl;
-        exit(1);
+        cout << "[OK] Incidencias cargadas desde archivo.\n\n";
+    } catch (const ArchivoInvalidoExc &e) {
+        cout << "[ERROR] Archivo invalido: " << e.what() << "\n";
+        cout << "[ABORTANDO] No se puede continuar.\n";
+        return;
+    } catch (const FormatoInvalidoExc &e) {
+        cout << "[ERROR] Formato invalido: " << e.what() << "\n";
+        cout << "[ABORTANDO] Verifique los datos de entrada.\n";
+        return;
     }
 }
 
 void Interfaz::ejecutarSimulacion() {
-    cout << "Iniciando simulacion de 30 dias..." << endl;
+    cout << "[INFO] Iniciando simulacion de 30 dias...\n";
+
     Simulador simulador(coleccion);
     simulador.ejecutarSimulador();
-    cout << "Simulacion completada." << endl;
-    cout << "Reporte generado en: reporte.txt" << endl;
+
+    cout << "[OK] Simulacion completada.\n";
+    cout << "[INFO] Reporte generado en: reporte.txt\n";
 }
 
 void Interfaz::ejecutar() {
     mostrarBienvenida();
+
     cargarDatos();
+
+
+    if (coleccion->getSize() == 0) {
+        cout << "[WARN] No hay equipos cargados. Simulacion cancelada.\n";
+        return;
+    }
+
     ejecutarSimulacion();
+
+    cout << "\n[FIN] Programa finalizado correctamente.\n";
 }

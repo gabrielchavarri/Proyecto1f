@@ -8,7 +8,7 @@
 #include <string>
 using namespace std;
 
-class Equipo; // forward declaration
+class Equipo;
 
 class Incidencia {
 private:
