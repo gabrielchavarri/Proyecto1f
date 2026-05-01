@@ -8,7 +8,7 @@ void Ordenador_T::ordenar(Equipo **arr, int n) {
   for (int i = 0; i < n - 1; i++) {
       int max = i;
       for (int j = i + 1; j < n; j++) {
-          if (arr[j]->calcularPrioridad() > arr[max]->calcularPrioridad()) {
+          if (arr[j]->getPrioridad() > arr[max]->getPrioridad()) {
               max = j;
           }
       }

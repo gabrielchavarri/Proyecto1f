@@ -1,7 +1,6 @@
 #include "MaintenancePlanner.h"
 #include "MantCorrectivo.h"
 #include "MantPreventivo.h"
-#define maxtecnico 3
 
 MaintenancePlanner::MaintenancePlanner(ColeccionEquipos* e) {
    equipos = e;
@@ -14,14 +13,16 @@ void MaintenancePlanner::planificarDia() {
 
 void MaintenancePlanner::seleccionarTop3(Equipo* seleccionados[], int& cantidad) {
    cantidad = 0;
-   for (int i = 0; i < equipos->getSize() && cantidad < maxtecnico; i++) {
+
+   for (int i = 0; i < equipos->getSize() && cantidad < cantidadTecnicos; i++) {
       seleccionados[cantidad++] = equipos->obtener(i);
    }
 }
 
 void MaintenancePlanner::ejecutarMantenimiento(Equipo* seleccionados[], int& cantidad) {
    for (int i = 0; i < cantidad; i++) {
-      if (seleccionados[i]->getIncidenciasActivas() > 2) {
+
+      if (seleccionados[i]->getIncidenciasActivas() > 0) {
          MantCorrectivo correctivo;
          correctivo.aplicar(seleccionados[i]);
       } else {

@@ -32,9 +32,11 @@ void ColeccionEquipos::ordenarPorPrioridad() {
 }
 
 Equipo *ColeccionEquipos::buscar(const string &id) {
-    int idx = ordenador.busquedaBinaria(equipos, size, id);
-    if (idx == -1) return nullptr;
-    return equipos[idx];
+    for (int i = 0; i < size; i++) {
+        if (equipos[i]->getId() == id)
+            return equipos[i];
+    }
+    return nullptr;
 }
 
 Equipo *ColeccionEquipos::obtener(int indice) {

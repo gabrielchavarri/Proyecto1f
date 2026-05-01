@@ -4,8 +4,23 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <thread>
+#include <chrono>
 
 using namespace std;
+
+
+void animacionCarga(string mensaje) {
+    cout << mensaje;
+    cout.flush();
+
+    for (int i = 0; i < 3; i++) {
+        this_thread::sleep_for(chrono::milliseconds(400));
+        cout << ".";
+        cout.flush();
+    }
+    cout << endl;
+}
 
 Interfaz::Interfaz() {
     coleccion = new ColeccionEquipos();
@@ -18,8 +33,7 @@ Interfaz::~Interfaz() {
 
 void Interfaz::mostrarBienvenida() {
     cout << "========================================\n";
-    cout << "  Sistema de Planificacion de Mantenimiento\n";
-    cout << "  Universidad Nacional de Costa Rica\n";
+    cout << "   SISTEMA DE MANTENIMIENTO\n";
     cout << "========================================\n\n";
 }
 
@@ -27,32 +41,31 @@ void Interfaz::cargarDatos() {
     CargadorDatos cargador;
 
     try {
-        cout << "[INFO] Cargando equipos...\n";
+        animacionCarga("Equipos");
         cargador.cargarEquipos("equipos.txt", *coleccion);
-        cout << "[OK] Equipos cargados: " << coleccion->getSize() << "\n\n";
+        cout << "Equipos cargados: " << coleccion->getSize() << "\n\n";
 
-        cout << "[INFO] Cargando incidencias...\n";
+        animacionCarga("Incidencias");
         cargador.cargarIncidencias("incidencias.txt", *coleccion);
-        cout << "[OK] Incidencias cargadas desde archivo.\n\n";
+        cout << "Incidencias listas\n\n";
+
     } catch (const ArchivoInvalidoExc &e) {
-        cout << "[ERROR] Archivo invalido: " << e.what() << "\n";
-        cout << "[ABORTANDO] No se puede continuar.\n";
-        return;
+        cout << "Archivo: " << e.what() << "\n";
+        exit(1);
     } catch (const FormatoInvalidoExc &e) {
-        cout << "[ERROR] Formato invalido: " << e.what() << "\n";
-        cout << "[ABORTANDO] Verifique los datos de entrada.\n";
-        return;
+        cout << "Formato: " << e.what() << "\n";
+        exit(1);
     }
 }
 
 void Interfaz::ejecutarSimulacion() {
-    cout << "[INFO] Iniciando simulacion de 30 dias...\n";
+    animacionCarga("Simulacion 30 dias");
 
     Simulador simulador(coleccion);
     simulador.ejecutarSimulador();
 
-    cout << "[OK] Simulacion completada.\n";
-    cout << "[INFO] Reporte generado en: reporte.txt\n";
+    cout << "\nSimulacion completada\n";
+    cout << "Generado en reporte.txt\n";
 }
 
 void Interfaz::ejecutar() {
@@ -60,13 +73,12 @@ void Interfaz::ejecutar() {
 
     cargarDatos();
 
-
     if (coleccion->getSize() == 0) {
-        cout << "[WARN] No hay equipos cargados. Simulacion cancelada.\n";
+        cout << "No hay equipos. Cancelando...\n";
         return;
     }
 
     ejecutarSimulacion();
 
-    cout << "\n[FIN] Programa finalizado correctamente.\n";
+    cout << "\nTodo salió bien \n";
 }
