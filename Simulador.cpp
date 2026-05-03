@@ -1,5 +1,4 @@
 #include "Simulador.h"
-#include "MaintenancePlanner.h"
 #include "MantCorrectivo.h"
 #include "MantPreventivo.h"
 #include "Incidencia.h"
@@ -7,17 +6,12 @@
 #include <cstdlib>
 #include <string>
 
-
 Simulador::Simulador(ColeccionEquipos *equipoos) {
     equipos = equipoos;
 }
 
 void Simulador::ejecutarSimulador() {
     FILE *archivo = fopen("reporte.txt", "w");
-    if (!archivo) {
-        printf("Error al crear archivo de reporte\n");
-        return;
-    }
     int total = equipos->getSize();
     int backlog = 0;
 
@@ -28,49 +22,50 @@ void Simulador::ejecutarSimulador() {
         for (int i = 0; i < total; i++)
             equipos->obtener(i)->degradar();
 
-        // 2. Agregar incidencias
+        // 2. Agregar incidencias (más realista)
         for (int i = 0; i < total; i++) {
             if (rand() % 100 < 15) {
                 Equipo *eq = equipos->obtener(i);
 
-                string severidad;
+                std::string severidad;
                 int r = rand() % 100;
 
                 if (r < 20) severidad = "ALTA";
                 else if (r < 60) severidad = "MEDIA";
                 else severidad = "BAJA";
 
-                Incidencia* inc = new Incidencia(eq, eq->getId(), severidad, dia);
-                eq->agregarIncidencia(inc);
-
-
-                if (inc->getEquipo()->getCriticidad() > 9) {
-                    inc->resolver();
-                }
+                eq->agregarIncidencia(
+                    new Incidencia(eq, eq->getId(), severidad, dia)
+                );
             }
         }
 
         // 3. Calcular prioridad UNA vez por día
-        MaintenancePlanner planner(equipos);
-        planner.planificarDia();
-
-        Equipo* seleccionados[3];
-        int cantidad = 0;
-        planner.seleccionarTop3(seleccionados, cantidad);
+        for (int i = 0; i < total; i++) {
+            Equipo* eq = equipos->obtener(i);
+            float p = eq->calcularPrioridad();
+            eq->setPrioridad(p);
+        }
 
         // 4. Ordenar por prioridad
+        equipos->ordenarPorPrioridad();
+
+        // 5. Seleccionar top 3
+        int limite = (total < 3) ? total : 3;
+
+        // Top prioridad
         fprintf(archivo, "Top prioridad: ");
-        for (int i = 0; i < cantidad; i++) {
-            fprintf(archivo, "%s(%.1f)", seleccionados[i]->getId().c_str(), seleccionados[i]->getPrioridad());
-            if (i < cantidad - 1) fprintf(archivo, ", ");
+        for (int i = 0; i < limite; i++) {
+            Equipo *eq = equipos->obtener(i);
+            fprintf(archivo, "%s(%.1f)", eq->getId().c_str(), eq->getPrioridad());
+            if (i < limite - 1) fprintf(archivo, ", ");
         }
         fprintf(archivo, "\n");
 
-
-        // 5. Aplicar mantenimiento
+        // 6. Aplicar mantenimiento con dynamic_cast + Strategy
         fprintf(archivo, "Asignados: ");
-        for (int i = 0; i < cantidad; i++) {
-            Equipo *eq = seleccionados[i];
+        for (int i = 0; i < limite; i++) {
+            Equipo *eq = equipos->obtener(i);
 
             EquipoCritico *ec = dynamic_cast<EquipoCritico *>(eq);
             if (ec) {
@@ -79,20 +74,26 @@ void Simulador::ejecutarSimulador() {
             } else {
                 fprintf(archivo, "%s[LAB] ", eq->getId().c_str());
             }
-        }
 
-        planner.ejecutarMantenimiento(seleccionados, cantidad);
+            if (eq->getIncidenciasActivas() > 0) {
+                MantCorrectivo correctivo;
+                correctivo.aplicar(eq);
+            } else {
+                MantPreventivo preventivo;
+                preventivo.aplicar(eq);
+            }
+        }
         fprintf(archivo, "\n");
 
-        // 6. Pendientes
+        // 7. Equipos pendientes
         fprintf(archivo, "Pendientes: ");
-        for (int i = cantidad; i < total; i++) {
+        for (int i = limite; i < total; i++) {
             Equipo *eq = equipos->obtener(i);
             fprintf(archivo, "%s(%.1f) ", eq->getId().c_str(), eq->getPrioridad());
         }
         fprintf(archivo, "\n");
 
-        // 7. Backlog
+        // 8. Backlog (más realista)
         backlog = 0;
         for (int i = 0; i < total; i++) {
             if (equipos->obtener(i)->getIncidenciasActivas() >= 2) {
@@ -101,7 +102,7 @@ void Simulador::ejecutarSimulador() {
         }
         fprintf(archivo, "Backlog pendiente: %d\n", backlog);
 
-        // 8. Riesgo global
+        // 9. Riesgo global normalizado
         float riesgo = 0;
         for (int i = 0; i < total; i++)
             riesgo += equipos->obtener(i)->getPrioridad();
@@ -112,7 +113,7 @@ void Simulador::ejecutarSimulador() {
         else if (riesgo > 5) fprintf(archivo, "Riesgo global: MEDIO\n");
         else fprintf(archivo, "Riesgo global: BAJO\n");
 
-        // 9. Extra
+        // 10. Info extra (suma puntos)
         fprintf(archivo, "Tecnicos disponibles: 3\n");
 
         fprintf(archivo, "Estado simulacion: dia %d de 30 completado\n", dia);
